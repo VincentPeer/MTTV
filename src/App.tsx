@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios'; // Import axios
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
+    setUploadSuccess(false);
+    setUploadError(null);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+    },
+    maxSize: 5 * 1024 * 1024, // 5MB
+  });
+
+  const handleSend = async () => {
+    if (file) {
+      setUploading(true);
+      setUploadError(null);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        await axios.post('http://localhost:3001/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setUploadSuccess(true);
+        setFile(null);
+      } catch (error) {
+        setUploadError('Erreur lors de l\'envoi du fichier. Veuillez réessayer.');
+        console.error('File upload error:', error);
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+    <div className="container">
+      <header>
+        <h1>MTTV</h1>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Bienvenue sur MTTV. Notre mission est de vous fournir une analyse claire et concise
+          de la santé financière de votre entreprise. Déposez simplement votre bilan
+          ci-dessous et laissez-nous vous éclairer sur vos chiffres.
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      </header>
+      <main>
+        <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
+          <input {...getInputProps()} />
+          {file ? (
+            <p>Fichier sélectionné : {file.name}</p>
+          ) : isDragActive ? (
+            <p>Glissez le fichier ici...</p>
+          ) : (
+            <p>Glissez-déposez votre bilan ici, ou cliquez pour le sélectionner.</p>
+          )}
+        </div>
+        <aside className="file-info">
+          <p>Types de fichiers acceptés : PDF, Word (.doc, .docx)</p>
+          <p>Taille maximale du fichier : 5MB</p>
+        </aside>
+
+        {uploadSuccess && <p className="success-message">Fichier envoyé avec succès !</p>}
+        {uploadError && <p className="error-message">{uploadError}</p>}
+
+        <button onClick={handleSend} disabled={!file || uploading}>
+          {uploading ? 'Envoi en cours...' : 'Envoyer'}
+        </button>
+      </main>
+      <footer>
+        <p>&copy; 2025 MTTV. Tous droits réservés.</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
