@@ -1,7 +1,7 @@
 const content = [
   {
-    title: "Investisseurs ! êtes vous conscients, voulez-vous aller plus loin que l’ESG ?",
-    body: "(Environnement, Social, Gouvernance) Les indicateurs traditionnels mesurent les performances… mais pas la vitalité. MTTV ne calcule pas les profits. Il évalue la qualité du signal vivant qui les porte. En analysant la pureté du processus triadique — humain, écosystème, intention — nous identifions les projets dont la performance est durable parce qu’elle est alignée avec les invariants du vivant global. Ce n’est pas une méthode ESG. C’est une écologie du rendement."
+    title: "Investisseurs ! êtes vous conscients, voulez-vous aller plus loin que l’ESG ? (Environnement, Social, Gouvernance)",
+    body: "Les indicateurs traditionnels mesurent les performances… mais pas la vitalité. MTTV ne calcule pas les profits. Il évalue la qualité du signal vivant qui les porte. En analysant la pureté du processus triadique — humain, écosystème, intention — nous identifions les projets dont la performance est durable parce qu’elle est alignée avec les invariants du vivant global. Ce n’est pas une méthode ESG. C’est une écologie du rendement."
   },
   {
     title: "Fonds d'investissement : un avantage compétitif fondé sur une compréhension profonde.",
