@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import './App.css';
+import { formattedDescription } from './textContent'; // Import the pre-formatted paragraphs
 
 function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -54,11 +55,7 @@ function App() {
     <div className="container">
       <header>
         <h1>MTTV</h1>
-        <p>
-          Bienvenue sur MTTV. Notre mission est de vous fournir une analyse claire et concise
-          de la santé financière de votre entreprise. Déposez simplement votre bilan
-          ci-dessous et laissez-nous vous éclairer sur vos chiffres.
-        </p>
+        <div className="description-container">{formattedDescription}</div> {/* Render the imported paragraphs */}
       </header>
       <main>
         <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
